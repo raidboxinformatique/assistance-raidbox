@@ -19,4 +19,10 @@ ECHO Chargement en cours, veuillez patienter.
 
 START /B /WAIT %SystemRoot%\System32\taskkill.exe /F /im teamviewer.exe > NUL 2>&1
 
-.\TeamViewerQS.exe
+IF NOT EXIST "%~dp0TeamViewerQS.exe" (
+	ECHO Erreur : TeamViewerQS.exe est introuvable.
+	pause
+	EXIT /B 1
+)
+
+START "" "%~dp0TeamViewerQS.exe"
