@@ -4,7 +4,7 @@ Depot de migration et de mise a jour de l'application Assistance RAIDBOX.
 
 ## Production
 
-Version stable publiee : `1.33`.
+Version stable publiee : `1.34`.
 
 Les anciennes installations executent `teamviewer.bat`, qui effectue un `git pull`
 puis lance `TeamViewerQS.exe`.
@@ -17,6 +17,9 @@ transition qui :
 3. installe Assistance RAIDBOX silencieusement ;
 4. configure `latest.json` comme manifeste de mise a jour GitHub ;
 5. lance la nouvelle application.
+
+Une fois la version installee lancee, le manifeste `latest.json` met
+automatiquement l'application a jour vers la version stable `1.34`.
 
 Le code source du programme de transition est dans `MigrationTo133.cs`.
 
