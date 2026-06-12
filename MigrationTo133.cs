@@ -38,7 +38,7 @@ internal static class MigrationTo133
             string launcherPath = Path.Combine(installDir, "AssistanceRaidbox.exe");
             string configPath = Path.Combine(installDir, "appsettings.json");
 
-            if (!IsTargetVersionInstalled(configPath, launcherPath))
+            if (!IsTargetVersionOrNewerInstalled(configPath, launcherPath))
             {
                 InstallTargetVersion();
             }
@@ -107,7 +107,7 @@ internal static class MigrationTo133
         }
     }
 
-    private static bool IsTargetVersionInstalled(string configPath, string launcherPath)
+    private static bool IsTargetVersionOrNewerInstalled(string configPath, string launcherPath)
     {
         if (!File.Exists(configPath) || !File.Exists(launcherPath))
         {
@@ -117,9 +117,13 @@ internal static class MigrationTo133
         try
         {
             Dictionary<string, object> config = ReadJson(configPath);
-            object version;
-            return config.TryGetValue("ApplicationVersion", out version)
-                && string.Equals(Convert.ToString(version), TargetVersion, StringComparison.OrdinalIgnoreCase);
+            object configuredVersion;
+            Version installed;
+            Version target;
+            return config.TryGetValue("ApplicationVersion", out configuredVersion)
+                && Version.TryParse(Convert.ToString(configuredVersion), out installed)
+                && Version.TryParse(TargetVersion, out target)
+                && installed >= target;
         }
         catch
         {
