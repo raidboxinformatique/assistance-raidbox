@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Win32;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,9 +16,11 @@ internal static class MigrationTo133
     private const string InstallerUrl =
         "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.33/Assistance-Raidbox-Setup-1.33.exe";
     private const string InstallerSha256 =
-        "7c18fd2afca728df2233dfee4fbc8eaf4f56dbe54e316ae2f70e5feabdb7ea83";
+        "1df6f7844377a0c58a060c2e33cd2b5a612d8c7e4cd54cfb7448d6f787fb1f20";
     private const string ManifestUrl =
         "https://raw.githubusercontent.com/raidboxinformatique/assistance-raidbox/main/latest.json";
+    private const string InstallerAppId = "8B0E7258-FB30-41F7-8E12-D0BD8EF62525";
+    private const string ApplicationDisplayName = "Assistance RAIDBOX";
 
     [STAThread]
     private static int Main(string[] args)
@@ -37,14 +40,32 @@ internal static class MigrationTo133
                 "Assistance");
             string launcherPath = Path.Combine(installDir, "AssistanceRaidbox.exe");
             string configPath = Path.Combine(installDir, "appsettings.json");
+            string legacyCheckoutDir = GetLegacyCheckoutDirectory(installDir);
+            Version installedVersion = GetInstalledVersion(configPath, launcherPath);
+            Version targetVersion = new Version(TargetVersion);
+            bool targetRegistered = IsTargetVersionOrNewerRegistered();
 
-            if (!IsTargetVersionOrNewerInstalled(configPath, launcherPath))
+            if (installedVersion == null
+                || installedVersion < targetVersion
+                || (installedVersion == targetVersion && !targetRegistered))
             {
                 InstallTargetVersion();
             }
 
+            installedVersion = GetInstalledVersion(configPath, launcherPath);
+            if (installedVersion == null || installedVersion < targetVersion)
+            {
+                throw new InvalidOperationException(
+                    "La version installee n'a pas pu etre confirmee apres la mise a jour.");
+            }
+            if (installedVersion == targetVersion && !IsTargetVersionOrNewerRegistered())
+            {
+                throw new InvalidOperationException(
+                    "Windows n'a pas enregistre Assistance RAIDBOX 1.33 dans Programmes et fonctionnalites.");
+            }
+
             PatchUpdateConfiguration(configPath);
-            StartLauncher(launcherPath);
+            StartLauncher(launcherPath, legacyCheckoutDir);
             WriteLog("Migration vers la version 1.33 terminee.");
             return 0;
         }
@@ -94,6 +115,33 @@ internal static class MigrationTo133
             {
                 throw new InvalidOperationException("Le manifeste GitHub n'est pas applique.");
             }
+
+            string legacyDir = Path.Combine(testDir, "legacy");
+            Directory.CreateDirectory(Path.Combine(legacyDir, ".git"));
+            Directory.CreateDirectory(Path.Combine(legacyDir, "git"));
+            File.WriteAllText(Path.Combine(legacyDir, "teamviewer.bat"), "@echo off");
+            File.WriteAllText(Path.Combine(legacyDir, "TeamViewerQS.exe"), "test");
+            File.WriteAllText(
+                Path.Combine(legacyDir, ".git", "config"),
+                "[remote \"origin\"]\r\nurl = https://github.com/raidboxinformatique/assistance-raidbox.git");
+            if (!IsLegacyCheckoutDirectory(legacyDir))
+            {
+                throw new InvalidOperationException("L'ancien dossier RAIDBOX n'est pas reconnu.");
+            }
+            if (IsLegacyCheckoutDirectory(testDir))
+            {
+                throw new InvalidOperationException("Un dossier non RAIDBOX a ete reconnu a tort.");
+            }
+
+            string cleanupArguments = BuildLegacyCleanupArguments(legacyDir);
+            string encodedPath = Convert.ToBase64String(Encoding.UTF8.GetBytes(legacyDir));
+            if (cleanupArguments.IndexOf(encodedPath, StringComparison.Ordinal) < 0
+                || cleanupArguments.IndexOf(
+                    Process.GetCurrentProcess().Id.ToString(),
+                    StringComparison.Ordinal) < 0)
+            {
+                throw new InvalidOperationException("Les parametres de nettoyage sont invalides.");
+            }
         }
         finally
         {
@@ -107,11 +155,11 @@ internal static class MigrationTo133
         }
     }
 
-    private static bool IsTargetVersionOrNewerInstalled(string configPath, string launcherPath)
+    private static Version GetInstalledVersion(string configPath, string launcherPath)
     {
         if (!File.Exists(configPath) || !File.Exists(launcherPath))
         {
-            return false;
+            return null;
         }
 
         try
@@ -119,16 +167,80 @@ internal static class MigrationTo133
             Dictionary<string, object> config = ReadJson(configPath);
             object configuredVersion;
             Version installed;
-            Version target;
-            return config.TryGetValue("ApplicationVersion", out configuredVersion)
-                && Version.TryParse(Convert.ToString(configuredVersion), out installed)
-                && Version.TryParse(TargetVersion, out target)
-                && installed >= target;
+            if (config.TryGetValue("ApplicationVersion", out configuredVersion)
+                && Version.TryParse(Convert.ToString(configuredVersion), out installed))
+            {
+                return installed;
+            }
         }
         catch
         {
-            return false;
         }
+        return null;
+    }
+
+    private static bool IsTargetVersionOrNewerRegistered()
+    {
+        Version targetVersion = new Version(TargetVersion);
+        RegistryHive[] hives = { RegistryHive.CurrentUser, RegistryHive.LocalMachine };
+        RegistryView[] views = { RegistryView.Registry64, RegistryView.Registry32 };
+
+        foreach (RegistryHive hive in hives)
+        {
+            foreach (RegistryView view in views)
+            {
+                try
+                {
+                    using (RegistryKey baseKey = RegistryKey.OpenBaseKey(hive, view))
+                    using (RegistryKey uninstallKey = baseKey.OpenSubKey(
+                        @"Software\Microsoft\Windows\CurrentVersion\Uninstall"))
+                    {
+                        if (uninstallKey == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (string subKeyName in uninstallKey.GetSubKeyNames())
+                        {
+                            using (RegistryKey applicationKey = uninstallKey.OpenSubKey(subKeyName))
+                            {
+                                if (applicationKey == null)
+                                {
+                                    continue;
+                                }
+
+                                string displayName = Convert.ToString(applicationKey.GetValue("DisplayName"));
+                                bool matchingApp = subKeyName.IndexOf(
+                                        InstallerAppId,
+                                        StringComparison.OrdinalIgnoreCase) >= 0
+                                    || string.Equals(
+                                        displayName,
+                                        ApplicationDisplayName,
+                                        StringComparison.OrdinalIgnoreCase);
+                                if (!matchingApp)
+                                {
+                                    continue;
+                                }
+
+                                Version registeredVersion;
+                                if (Version.TryParse(
+                                        Convert.ToString(applicationKey.GetValue("DisplayVersion")),
+                                        out registeredVersion)
+                                    && registeredVersion >= targetVersion)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        return false;
     }
 
     private static void InstallTargetVersion()
@@ -257,7 +369,7 @@ internal static class MigrationTo133
         }
     }
 
-    private static void StartLauncher(string launcherPath)
+    private static void StartLauncher(string launcherPath, string legacyCheckoutDir)
     {
         if (!File.Exists(launcherPath))
         {
@@ -267,9 +379,63 @@ internal static class MigrationTo133
         Process.Start(new ProcessStartInfo
         {
             FileName = launcherPath,
+            Arguments = string.IsNullOrWhiteSpace(legacyCheckoutDir)
+                ? string.Empty
+                : BuildLegacyCleanupArguments(legacyCheckoutDir),
             WorkingDirectory = Path.GetDirectoryName(launcherPath),
             UseShellExecute = true
         });
+    }
+
+    private static string GetLegacyCheckoutDirectory(string installDir)
+    {
+        string baseDir = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        string normalizedInstallDir = Path.GetFullPath(installDir)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        if (string.Equals(baseDir, normalizedInstallDir, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return IsLegacyCheckoutDirectory(baseDir) ? baseDir : null;
+    }
+
+    private static bool IsLegacyCheckoutDirectory(string directory)
+    {
+        if (string.IsNullOrWhiteSpace(directory)
+            || !Directory.Exists(Path.Combine(directory, ".git"))
+            || !Directory.Exists(Path.Combine(directory, "git"))
+            || !File.Exists(Path.Combine(directory, "teamviewer.bat"))
+            || !File.Exists(Path.Combine(directory, "TeamViewerQS.exe")))
+        {
+            return false;
+        }
+
+        string gitConfigPath = Path.Combine(directory, ".git", "config");
+        if (!File.Exists(gitConfigPath))
+        {
+            return false;
+        }
+
+        try
+        {
+            return File.ReadAllText(gitConfigPath).IndexOf(
+                "github.com/raidboxinformatique/assistance-raidbox",
+                StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string BuildLegacyCleanupArguments(string legacyCheckoutDir)
+    {
+        string encodedPath = Convert.ToBase64String(Encoding.UTF8.GetBytes(legacyCheckoutDir));
+        return "--cleanup-legacy=" + encodedPath
+            + " --wait-pid=" + Process.GetCurrentProcess().Id;
     }
 
     private static void WriteLog(string message)
