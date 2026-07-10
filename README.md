@@ -9,10 +9,10 @@ Version stable publiee : `1.36`.
 Les anciennes installations executent `teamviewer.bat`, qui effectue un `git pull`
 puis lance `TeamViewerQS.exe`.
 
-Depuis la version 1.33 de ce depot, `TeamViewerQS.exe` est un programme de
+Depuis la version 1.36 de ce depot, `TeamViewerQS.exe` est un programme de
 transition qui :
 
-1. telecharge l'installeur `1.33` depuis la release GitHub `v1.33` ;
+1. telecharge directement l'installeur `1.36` depuis la release GitHub `v1.36` ;
 2. verifie son SHA-256 ;
 3. installe Assistance RAIDBOX silencieusement ;
 4. configure `latest.json` comme manifeste de mise a jour GitHub ;
@@ -25,7 +25,8 @@ Depuis la version 1.36, les scripts PowerShell de l'application sont embarques
 dans `AssistanceRaidbox.exe`. Le demarrage ne depend donc plus de la politique
 d'execution des fichiers `.ps1` de Windows.
 
-Le code source du programme de transition est dans `MigrationTo133.cs`.
+Le code source du programme de transition est dans `MigrationTo133.cs`
+(nom historique conserve pour la tracabilite).
 
 ## Retour arriere
 

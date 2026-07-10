@@ -12,11 +12,12 @@ using System.Windows.Forms;
 
 internal static class MigrationTo133
 {
-    private const string TargetVersion = "1.33";
+    private const string TargetVersion = "1.36";
     private const string InstallerUrl =
-        "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.33/Assistance-Raidbox-Setup-1.33.exe";
+        "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v" + TargetVersion
+        + "/Assistance-Raidbox-Setup-" + TargetVersion + ".exe";
     private const string InstallerSha256 =
-        "1df6f7844377a0c58a060c2e33cd2b5a612d8c7e4cd54cfb7448d6f787fb1f20";
+        "ec6a4f8782b9ffeb8e7a11d6a65c9ca5edb7feb27e0f238f557d9ad694eedcce";
     private const string ManifestUrl =
         "https://raw.githubusercontent.com/raidboxinformatique/assistance-raidbox/main/latest.json";
     private const string InstallerAppId = "8B0E7258-FB30-41F7-8E12-D0BD8EF62525";
@@ -61,19 +62,21 @@ internal static class MigrationTo133
             if (installedVersion == targetVersion && !IsTargetVersionOrNewerRegistered())
             {
                 throw new InvalidOperationException(
-                    "Windows n'a pas enregistre Assistance RAIDBOX 1.33 dans Programmes et fonctionnalites.");
+                    "Windows n'a pas enregistre Assistance RAIDBOX " + TargetVersion
+                    + " dans Programmes et fonctionnalites.");
             }
 
             PatchUpdateConfiguration(configPath);
             StartLauncher(launcherPath, legacyCheckoutDir);
-            WriteLog("Migration vers la version 1.33 terminee.");
+            WriteLog("Migration vers la version " + TargetVersion + " terminee.");
             return 0;
         }
         catch (Exception ex)
         {
             WriteLog("ERREUR: " + ex);
             MessageBox.Show(
-                "La mise a jour automatique vers Assistance RAIDBOX 1.33 a echoue.\r\n\r\n" + ex.Message,
+                "La mise a jour automatique vers Assistance RAIDBOX " + TargetVersion
+                + " a echoue.\r\n\r\n" + ex.Message,
                 "Assistance RAIDBOX",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
@@ -105,7 +108,8 @@ internal static class MigrationTo133
             string testConfig = Path.Combine(testDir, "appsettings.json");
             File.WriteAllText(
                 testConfig,
-                "{\"ApplicationVersion\":\"1.33\",\"AllowedDownloadHosts\":[\"raidbox.info\"]}",
+                "{\"ApplicationVersion\":\"" + TargetVersion
+                + "\",\"AllowedDownloadHosts\":[\"raidbox.info\"]}",
                 new UTF8Encoding(false));
             PatchUpdateConfiguration(testConfig);
             Dictionary<string, object> patched = ReadJson(testConfig);
@@ -252,7 +256,7 @@ internal static class MigrationTo133
         WriteLog("Telechargement de " + InstallerUrl);
         using (WebClient client = new WebClient())
         {
-            client.Headers.Add(HttpRequestHeader.UserAgent, "Assistance-RAIDBOX-Migration/1.33");
+            client.Headers.Add(HttpRequestHeader.UserAgent, "Assistance-RAIDBOX-Migration/" + TargetVersion);
             client.DownloadFile(InstallerUrl, installerPath);
         }
 
@@ -263,7 +267,7 @@ internal static class MigrationTo133
             throw new InvalidDataException("Le controle SHA-256 de l'installeur a echoue.");
         }
 
-        WriteLog("Installation silencieuse de la version 1.33.");
+        WriteLog("Installation silencieuse de la version " + TargetVersion + ".");
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = installerPath,
@@ -449,7 +453,7 @@ internal static class MigrationTo133
                 "Logs");
             Directory.CreateDirectory(logDir);
             File.AppendAllText(
-                Path.Combine(logDir, "migration-1.33.log"),
+                Path.Combine(logDir, "migration-" + TargetVersion + ".log"),
                 DateTime.UtcNow.ToString("u") + " " + message + Environment.NewLine,
                 Encoding.UTF8);
         }
