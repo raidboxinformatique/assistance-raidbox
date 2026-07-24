@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
@@ -67,6 +68,7 @@ internal static class MigrationTo133
             }
 
             PatchUpdateConfiguration(configPath);
+            StopInstalledLauncherInstances(launcherPath);
             StartLauncher(launcherPath, legacyCheckoutDir);
             WriteLog("Migration vers la version " + TargetVersion + " terminee.");
             return 0;
@@ -370,6 +372,76 @@ internal static class MigrationTo133
                 result.Append(value.ToString("x2"));
             }
             return result.ToString();
+        }
+    }
+
+    private static void StopInstalledLauncherInstances(string launcherPath)
+    {
+        string processName = Path.GetFileNameWithoutExtension(launcherPath);
+        DateTime deadline = DateTime.UtcNow.AddSeconds(8);
+        DateTime noInstanceDeadline = DateTime.UtcNow.AddSeconds(4);
+        DateTime quietSince = DateTime.UtcNow;
+        bool foundMatchingProcess = false;
+
+        while (DateTime.UtcNow < deadline)
+        {
+            bool stoppedProcess = false;
+            foreach (Process process in Process.GetProcessesByName(processName))
+            {
+                using (process)
+                {
+                    try
+                    {
+                        string processPath = process.MainModule == null
+                            ? string.Empty
+                            : process.MainModule.FileName;
+                        if (!string.Equals(
+                                Path.GetFullPath(processPath),
+                                Path.GetFullPath(launcherPath),
+                                StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        foundMatchingProcess = true;
+                        stoppedProcess = true;
+                        WriteLog("Fermeture de l'instance lancee par l'installeur.");
+                        if (process.CloseMainWindow())
+                        {
+                            process.WaitForExit(3000);
+                        }
+                        if (!process.HasExited)
+                        {
+                            process.Kill();
+                            process.WaitForExit(3000);
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (System.ComponentModel.Win32Exception)
+                    {
+                    }
+                }
+            }
+
+            if (stoppedProcess)
+            {
+                quietSince = DateTime.UtcNow;
+            }
+            else if (foundMatchingProcess && DateTime.UtcNow - quietSince >= TimeSpan.FromSeconds(1))
+            {
+                return;
+            }
+            else if (!foundMatchingProcess && DateTime.UtcNow >= noInstanceDeadline)
+            {
+                return;
+            }
+
+            Thread.Sleep(200);
         }
     }
 

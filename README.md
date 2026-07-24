@@ -17,7 +17,8 @@ transition qui :
 2. verifie son SHA-256 ;
 3. installe Assistance RAIDBOX silencieusement ;
 4. configure `latest.json` comme manifeste de mise a jour GitHub ;
-5. lance la nouvelle application.
+5. ferme l'instance provisoire ouverte par l'installeur ;
+6. lance une seule instance de la nouvelle application.
 
 Une fois la version installee lancee, le manifeste `latest.json` met
 automatiquement l'application a jour vers la version stable `1.37`.
