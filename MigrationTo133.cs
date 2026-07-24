@@ -13,12 +13,12 @@ using System.Windows.Forms;
 
 internal static class MigrationTo133
 {
-    private const string TargetVersion = "1.38";
+    private const string TargetVersion = "1.39";
     private const string InstallerUrl =
         "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v" + TargetVersion
         + "/Assistance-Raidbox-Setup-" + TargetVersion + ".exe";
     private const string InstallerSha256 =
-        "61fbe7de206f102c3968f52bfa185d4c08a048ca66205c136a9c6f660bb26545";
+        "e0899a626302dfbaf1494232af20e595d6eed5fcf0c856084aa066a001a5ba54";
     private const string ManifestUrl =
         "https://raw.githubusercontent.com/raidboxinformatique/assistance-raidbox/main/latest.json";
     private const string InstallerAppId = "8B0E7258-FB30-41F7-8E12-D0BD8EF62525";
