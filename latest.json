@@ -1,36 +1,36 @@
 {
     "schema":  1,
     "channel":  "stable",
-    "generatedAt":  "2026-07-10T06:30:36Z",
+    "generatedAt":  "2026-07-24T14:50:25Z",
     "launcher":  {
-                     "version":  "1.36",
-                     "installerUrl":  "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.36/Assistance-Raidbox-Setup-1.36.exe",
-                     "sha256":  "ec6a4f8782b9ffeb8e7a11d6a65c9ca5edb7feb27e0f238f557d9ad694eedcce",
+                     "version":  "1.37",
+                     "installerUrl":  "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.37/Assistance-Raidbox-Setup-1.37.exe",
+                     "sha256":  "af0c37c8afb674504004b3e22dfe4cd3d291a826a5d55b6b07bf18f267ece7ae",
                      "silentArgs":  "/VERYSILENT /NORESTART /CLOSEAPPLICATIONS"
                  },
     "files":  [
                   {
                       "id":  "teamviewer-session",
                       "label":  "TeamViewer QuickSupport Session",
-                      "version":  "1.36",
+                      "version":  "1.37",
                       "target":  "TeamViewerQS Session.exe",
-                      "url":  "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.36/TeamViewerQS.Session.exe",
+                      "url":  "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.37/TeamViewerQS.Session.exe",
                       "sha256":  "4b88c9f958897f2adeaf3ed41ecb78aad77eb23e5812ad53e3bdf8ac02240131",
                       "expectedSignerSubject":  "TeamViewer Germany GmbH"
                   },
                   {
                       "id":  "teamviewer-id",
                       "label":  "TeamViewer QuickSupport ID",
-                      "version":  "1.36",
+                      "version":  "1.37",
                       "target":  "TeamViewerQS ID.exe",
-                      "url":  "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.36/TeamViewerQS.ID.exe",
+                      "url":  "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v1.37/TeamViewerQS.ID.exe",
                       "sha256":  "821027f5cc83bfdb47da0c8e6ba3a653b415f9cb80a1e5048dfe75d4419b296b",
                       "expectedSignerSubject":  "TeamViewer Germany GmbH"
                   }
               ],
-    "signedPayload":  "eyJzY2hlbWEiOjEsImNoYW5uZWwiOiJzdGFibGUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDctMTBUMDY6MzA6MzZaIiwibGF1bmNoZXIiOnsidmVyc2lvbiI6IjEuMzYiLCJpbnN0YWxsZXJVcmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmFpZGJveGluZm9ybWF0aXF1ZS9hc3Npc3RhbmNlLXJhaWRib3gvcmVsZWFzZXMvZG93bmxvYWQvdjEuMzYvQXNzaXN0YW5jZS1SYWlkYm94LVNldHVwLTEuMzYuZXhlIiwic2hhMjU2IjoiZWM2YTRmODc4MmI5ZmZlYjhlN2ExMWQ2YTY1YzljYTVlZGI3ZmViMjdlMGYyMzhmNTU3ZDlhZDY5NGVlZGNjZSIsInNpbGVudEFyZ3MiOiIvVkVSWVNJTEVOVCAvTk9SRVNUQVJUIC9DTE9TRUFQUExJQ0FUSU9OUyJ9LCJmaWxlcyI6W3siaWQiOiJ0ZWFtdmlld2VyLXNlc3Npb24iLCJsYWJlbCI6IlRlYW1WaWV3ZXIgUXVpY2tTdXBwb3J0IFNlc3Npb24iLCJ2ZXJzaW9uIjoiMS4zNiIsInRhcmdldCI6IlRlYW1WaWV3ZXJRUyBTZXNzaW9uLmV4ZSIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9yYWlkYm94aW5mb3JtYXRpcXVlL2Fzc2lzdGFuY2UtcmFpZGJveC9yZWxlYXNlcy9kb3dubG9hZC92MS4zNi9UZWFtVmlld2VyUVMuU2Vzc2lvbi5leGUiLCJzaGEyNTYiOiI0Yjg4YzlmOTU4ODk3ZjJhZGVhZjNlZDQxZWNiNzhhYWQ3N2ViMjNlNTgxMmFkNTNlM2JkZjhhYzAyMjQwMTMxIiwiZXhwZWN0ZWRTaWduZXJTdWJqZWN0IjoiVGVhbVZpZXdlciBHZXJtYW55IEdtYkgifSx7ImlkIjoidGVhbXZpZXdlci1pZCIsImxhYmVsIjoiVGVhbVZpZXdlciBRdWlja1N1cHBvcnQgSUQiLCJ2ZXJzaW9uIjoiMS4zNiIsInRhcmdldCI6IlRlYW1WaWV3ZXJRUyBJRC5leGUiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmFpZGJveGluZm9ybWF0aXF1ZS9hc3Npc3RhbmNlLXJhaWRib3gvcmVsZWFzZXMvZG93bmxvYWQvdjEuMzYvVGVhbVZpZXdlclFTLklELmV4ZSIsInNoYTI1NiI6IjgyMTAyN2Y1Y2M4M2JmZGI0N2RhMGM4ZTZiYTNhNjUzYjQxNWY5Y2I4MGExZTUwNDhkZmU3NWQ0NDE5YjI5NmIiLCJleHBlY3RlZFNpZ25lclN1YmplY3QiOiJUZWFtVmlld2VyIEdlcm1hbnkgR21iSCJ9XX0=",
+    "signedPayload":  "eyJzY2hlbWEiOjEsImNoYW5uZWwiOiJzdGFibGUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDctMjRUMTQ6NTA6MjVaIiwibGF1bmNoZXIiOnsidmVyc2lvbiI6IjEuMzciLCJpbnN0YWxsZXJVcmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmFpZGJveGluZm9ybWF0aXF1ZS9hc3Npc3RhbmNlLXJhaWRib3gvcmVsZWFzZXMvZG93bmxvYWQvdjEuMzcvQXNzaXN0YW5jZS1SYWlkYm94LVNldHVwLTEuMzcuZXhlIiwic2hhMjU2IjoiYWYwYzM3YzhhZmI2NzQ1MDQwMDRiM2UyMmRmZTRjZDNkMjkxYTgyNmE1ZDU1YjZiMDdiZjE4ZjI2N2VjZTdhZSIsInNpbGVudEFyZ3MiOiIvVkVSWVNJTEVOVCAvTk9SRVNUQVJUIC9DTE9TRUFQUExJQ0FUSU9OUyJ9LCJmaWxlcyI6W3siaWQiOiJ0ZWFtdmlld2VyLXNlc3Npb24iLCJsYWJlbCI6IlRlYW1WaWV3ZXIgUXVpY2tTdXBwb3J0IFNlc3Npb24iLCJ2ZXJzaW9uIjoiMS4zNyIsInRhcmdldCI6IlRlYW1WaWV3ZXJRUyBTZXNzaW9uLmV4ZSIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9yYWlkYm94aW5mb3JtYXRpcXVlL2Fzc2lzdGFuY2UtcmFpZGJveC9yZWxlYXNlcy9kb3dubG9hZC92MS4zNy9UZWFtVmlld2VyUVMuU2Vzc2lvbi5leGUiLCJzaGEyNTYiOiI0Yjg4YzlmOTU4ODk3ZjJhZGVhZjNlZDQxZWNiNzhhYWQ3N2ViMjNlNTgxMmFkNTNlM2JkZjhhYzAyMjQwMTMxIiwiZXhwZWN0ZWRTaWduZXJTdWJqZWN0IjoiVGVhbVZpZXdlciBHZXJtYW55IEdtYkgifSx7ImlkIjoidGVhbXZpZXdlci1pZCIsImxhYmVsIjoiVGVhbVZpZXdlciBRdWlja1N1cHBvcnQgSUQiLCJ2ZXJzaW9uIjoiMS4zNyIsInRhcmdldCI6IlRlYW1WaWV3ZXJRUyBJRC5leGUiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmFpZGJveGluZm9ybWF0aXF1ZS9hc3Npc3RhbmNlLXJhaWRib3gvcmVsZWFzZXMvZG93bmxvYWQvdjEuMzcvVGVhbVZpZXdlclFTLklELmV4ZSIsInNoYTI1NiI6IjgyMTAyN2Y1Y2M4M2JmZGI0N2RhMGM4ZTZiYTNhNjUzYjQxNWY5Y2I4MGExZTUwNDhkZmU3NWQ0NDE5YjI5NmIiLCJleHBlY3RlZFNpZ25lclN1YmplY3QiOiJUZWFtVmlld2VyIEdlcm1hbnkgR21iSCJ9XX0=",
     "signature":  {
                       "algorithm":  "RS256",
-                      "value":  "UgHZwHUbq7lCYgohu+QDCOLYcKJLPn6lm5CeaPhDL5bJx6pcZl39gXjPVecCQIrE0h9AL0oNb+ByDqvm2B79k88i263rzxwNmb7Owt0iW9soUu+ZhUHValm2r5zobXrfnNKa3S/oubqUjzrM0RTJlPC9WbXAiaQpHZ66CCHfwvF45RWWQMuYGLDeDEil5TTHOVDmb3ING3bOF+ojGqnV3xdyYnF0WO2EMIAdg5qt5e7p2FbsmoiJOWkX6c5rg47cffsQ05gJvTUa7shIyyCQwcyMehDzno5vcHCKeMDNtRRBCOOn1DWFw0O4tNWw+dSryPY5RQm8mtM8A1SEdbORfAJtodKCwDI0adUU/K2QOXz2+4PRMXYBVcW8SKEE0Z/LFD3uNtGsghhCzioaqsYsbCXzJCGfLZafQV2WrKnjNuDBI963hALiK0n0pd1MDMixsKyLfcgXXKZ+OxmdngVqi4p0yvKxeuKKR5zxK2vECrX1xxHupg4soq046/ulXC1K"
+                      "value":  "sL+JOEFqi4XyCI9yUZjI3L4EI8tLD1A1+wnMLJXjkl/AZujEyApS/QxgNJllvklxzS9B4S5OORDSG50Wu3pdNDwQSMxZ/NmTruotU4z/fSo0CZ3cQBb8+zgEz3Cj7G5nVOhhvyRiBj+EndKT28SH/zSd5v2aQ53StSDyG4yOkWMdrEaa7NMGiztJ6Z577EEV4FACOS/MxwTxdXjPUw5TPSAsGYNCTKWCBCKzuBv5Nz4GpkgxwB+7Bj8JeD6wSpHAXku4yqkxIUhN3LtrlgC1CXRYpv7+6G1//baT0LCq9EYLnM7Poh2XOcsX130fCP5WaM23+BpCt0zT0XGYxANOsTTkGkv9gT6b48MlgQ1VKXMnxuPdC7UTMnu/sb8narcKWmMxG96o1IYuMG507q/BrBXqdOIqU+/CJBt+Amv+vWxVPgGCK/rQFUjkmD1R3U9b5R38d7kLNta2A866GeT3Gtad65wAfIQ1M+HQAwAc6y8rEcmsF9gp86BzIjuKzCa6"
                   }
 }
