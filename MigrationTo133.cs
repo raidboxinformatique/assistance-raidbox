@@ -13,12 +13,12 @@ using System.Windows.Forms;
 
 internal static class MigrationTo133
 {
-    private const string TargetVersion = "1.37";
+    private const string TargetVersion = "1.38";
     private const string InstallerUrl =
         "https://github.com/raidboxinformatique/assistance-raidbox/releases/download/v" + TargetVersion
         + "/Assistance-Raidbox-Setup-" + TargetVersion + ".exe";
     private const string InstallerSha256 =
-        "af0c37c8afb674504004b3e22dfe4cd3d291a826a5d55b6b07bf18f267ece7ae";
+        "61fbe7de206f102c3968f52bfa185d4c08a048ca66205c136a9c6f660bb26545";
     private const string ManifestUrl =
         "https://raw.githubusercontent.com/raidboxinformatique/assistance-raidbox/main/latest.json";
     private const string InstallerAppId = "8B0E7258-FB30-41F7-8E12-D0BD8EF62525";
@@ -273,7 +273,9 @@ internal static class MigrationTo133
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = installerPath,
-            Arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS",
+            Arguments =
+                "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART "
+                + "/CLOSEAPPLICATIONS /FORCECLOSEAPPLICATIONS",
             UseShellExecute = true,
             WorkingDirectory = Path.GetDirectoryName(installerPath)
         };
